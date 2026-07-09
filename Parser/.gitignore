@@ -1,0 +1,12 @@
+# .NET / Rider / Visual Studio specific files
+bin/
+obj/
+.vs/
+.idea/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.user
+*.lock.json
+*.tmp
