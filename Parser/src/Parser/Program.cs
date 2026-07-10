@@ -12,12 +12,14 @@ foreach (var filePath in composeFiles)
 {
     FileInfo file = new FileInfo(filePath);
 
+    // Discover Device
     var deviceName = StringHelper.ValueOrUnknown(file.Directory?.Parent?.Name);
     var device = result.FirstOrDefault(x => x.Name == deviceName) ?? result.AddNewEntity(new Device
     {
         Name = deviceName
     });
 
+    // Discover Service
     var serviceName = StringHelper.ValueOrUnknown(file.Directory?.Name);
     var service = device.Services.FirstOrDefault(x => x.Name == serviceName) ?? device.Services.AddNewEntity(new Service
     {
