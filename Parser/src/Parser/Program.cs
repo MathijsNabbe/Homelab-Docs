@@ -11,13 +11,15 @@ var result = new List<Device>();
 foreach (var filePath in composeFiles)
 {
     FileInfo file = new FileInfo(filePath);
-    var serviceName = file?.Directory?.Name.ValueOrUnknown();
-    var deviceName = file?.Directory?.Parent?.Name.ValueOrUnknown();
+    var serviceName = StringHelper.ValueOrUnknown(file.Directory?.Name);
+    var deviceName = StringHelper.ValueOrUnknown(file.Directory?.Parent?.Name);
 
-    var device = 
-    result.FirstOrDefault(x => x.Name == deviceName) ?? 
-    result.AddNewEntity<Device>(new Device
-    {
-        Name = deviceName
-    });
+    var device =
+        result.FirstOrDefault(x => x.Name == deviceName) ??
+        result.AddNewEntity<Device>(new Device
+        {
+            Name = deviceName
+        });
 }
+
+var bla = "";
