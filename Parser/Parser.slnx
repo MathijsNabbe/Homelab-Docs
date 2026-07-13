@@ -7,4 +7,7 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Folder Name="/Workflows/">
+    <File Path="..\.github\workflows\deploy-pages.yml" />
+  </Folder>
 </Solution>
