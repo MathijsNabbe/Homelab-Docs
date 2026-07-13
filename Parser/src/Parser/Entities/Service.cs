@@ -5,5 +5,5 @@ namespace Parser.Entities;
 public class Service
 {
     public required string Name { get; set; }
-    public List<Container> Containers { get; set; } = new();
+    public List<Container> Containers { get; } = new();
 }

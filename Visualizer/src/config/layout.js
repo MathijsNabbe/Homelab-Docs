@@ -1,5 +1,5 @@
 export const LAYOUT = {
-  columnX: 0,
   levelHeight: 100,
+  branchGap: 200,
   blockGap: 64,
 }

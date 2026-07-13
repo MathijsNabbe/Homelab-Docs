@@ -114,6 +114,13 @@ body,
   font-size: 0.75rem;
 }
 
+.entity-node--port .entity-node__label {
+  font-weight: 400;
+  color: var(--color-text-subtle);
+  font-size: 0.6875rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 .entity-node .vue-flow__handle {
   width: 6px;
   height: 6px;

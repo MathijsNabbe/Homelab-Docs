@@ -27,10 +27,15 @@ foreach (var filePath in composeFiles)
         device.Services.FirstOrDefault(x => x.Name == deviceName)
         ?? device.Services.AddNewEntity(new Service { Name = serviceName });
 
+    // Read Compose
     var composeFile = YamlHelper.Read<DockerCompose>(file);
     foreach (var container in composeFile.Containers)
     {
-        service.Containers.AddNewEntity(new Container { Name = container.Key });
+        var containerViewModel = service.Containers.AddNewEntity(new Container { Name = container.Key });
+        
+        // Read Ports
+        foreach (var port in container.Value.Ports)
+            containerViewModel.Ports.Add(port);
     }
 }
 
