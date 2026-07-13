@@ -1,10 +1,11 @@
 <script setup>
-import { markRaw, onMounted, ref } from 'vue'
+import { markRaw, onMounted, onUnmounted, ref } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { fetchMapping } from '../composables/useMapping.js'
 import { buildGraph } from '../utils/buildGraph.js'
+import { resolveServiceIcons, revokeServiceIcons } from '../utils/resolveIcons.js'
 import EntityNode from './nodes/EntityNode.vue'
 
 const nodeTypes = {
@@ -23,13 +24,17 @@ onMounted(async () => {
   try {
     const devices = await fetchMapping()
     const graph = buildGraph(devices)
-    nodes.value = graph.nodes
+    nodes.value = await resolveServiceIcons(graph.nodes)
     edges.value = graph.edges
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Unknown error'
   } finally {
     loading.value = false
   }
+})
+
+onUnmounted(() => {
+  revokeServiceIcons()
 })
 </script>
 

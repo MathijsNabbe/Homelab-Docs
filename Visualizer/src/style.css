@@ -108,6 +108,20 @@ body,
   font-size: 0.875rem;
 }
 
+.entity-node--service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+}
+
+.entity-node__icon {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .entity-node--container .entity-node__label {
   font-weight: 400;
   color: var(--color-text-muted);

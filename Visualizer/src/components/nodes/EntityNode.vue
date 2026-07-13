@@ -16,6 +16,12 @@ defineProps({
 <template>
   <div class="entity-node" :class="`entity-node--${type}`">
     <Handle type="target" :position="Position.Top" />
+    <img
+      v-if="type === 'service' && data.iconUrl"
+      class="entity-node__icon"
+      :src="data.iconUrl"
+      :alt="data.label"
+    />
     <span class="entity-node__label">{{ data.label }}</span>
     <Handle type="source" :position="Position.Bottom" />
   </div>

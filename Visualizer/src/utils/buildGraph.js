@@ -20,12 +20,12 @@ function edgeId(source, target) {
   return `${source}->${target}`
 }
 
-function createNode(id, type, label, position) {
+function createNode(id, type, label, position, extraData = {}) {
   return {
     id,
     type,
     position,
-    data: { label },
+    data: { label, ...extraData },
   }
 }
 
@@ -63,6 +63,8 @@ function addServiceBranch(device, service, branchX, serviceY, nodes, edges, curr
     createNode(currentServiceId, 'service', service.Name, {
       x: branchX,
       y: serviceY,
+    }, {
+      iconSource: service.IconUrl ?? null,
     }),
   )
 

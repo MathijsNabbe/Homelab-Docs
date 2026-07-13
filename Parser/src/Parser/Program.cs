@@ -17,8 +17,8 @@ foreach (var filePath in composeFiles)
 
     // Discover Device
     var deviceName = StringHelper.ValueOrUnknown(file.Directory?.Parent?.Name);
-    var device = 
-        result.FirstOrDefault(x => x.Name == deviceName) 
+    var device =
+        result.FirstOrDefault(x => x.Name == deviceName)
         ?? result.AddNewEntity(new Device { Name = deviceName });
 
     // Discover Service
@@ -32,6 +32,9 @@ foreach (var filePath in composeFiles)
     foreach (var container in composeFile.Containers)
     {
         var containerViewModel = service.Containers.AddNewEntity(new Container { Name = container.Key });
+        
+        // Search service icon
+        service.SearchIconUrl(container.Value.Labels);
         
         // Read Ports
         foreach (var port in container.Value.Ports)
