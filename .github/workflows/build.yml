@@ -95,7 +95,7 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Download Parser build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: parser-build
           path: Parser/src/Parser/bin/Release/net10.0/
@@ -120,13 +120,13 @@ jobs:
 
     steps:
       - name: Download Visualizer dist
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: visualizer-dist
           path: dist
 
       - name: Download mapping.json
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: mapping-json
           path: dist
