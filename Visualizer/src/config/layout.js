@@ -1,7 +1,10 @@
 export const LAYOUT = {
-  levelHeight: 100,
-  branchGap: 200,
-  blockGap: 64,
-  containerGap: 140,
-  nodeMinWidth: 120,
+  deviceToServicesGap: 48,
+  branchGap: 36,
+  blockGap: 56,
+  nodeMinWidth: 100,
+  nodeMinHeight: 40,
+  nodeMargin: 8,
+  serviceHeaderHeight: 52,
+  containerRowHeight: 34,
 }

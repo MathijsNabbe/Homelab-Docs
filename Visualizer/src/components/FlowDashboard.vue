@@ -1,23 +1,23 @@
 <script setup>
-import { markRaw, onMounted, onUnmounted, ref } from 'vue'
+import { markRaw, nextTick, onMounted, onUnmounted, ref } from 'vue'
 import { VueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { fetchMapping } from '../composables/useMapping.js'
-import { buildGraph } from '../utils/buildGraph.js'
+import { buildGraph, layoutGraph } from '../utils/buildGraph.js'
 import { resolveServiceIcons, revokeServiceIcons } from '../utils/resolveIcons.js'
 import EntityNode from './nodes/EntityNode.vue'
 
 const nodeTypes = {
   device: markRaw(EntityNode),
   service: markRaw(EntityNode),
-  container: markRaw(EntityNode),
 }
 
 const nodes = ref([])
 const edges = ref([])
 const error = ref(null)
 const loading = ref(true)
+const flowRef = ref(null)
 
 onMounted(async () => {
   try {
@@ -35,6 +35,14 @@ onMounted(async () => {
 onUnmounted(() => {
   revokeServiceIcons()
 })
+
+function onNodesInitialized(measuredNodes) {
+  nodes.value = layoutGraph(measuredNodes)
+
+  nextTick(() => {
+    flowRef.value?.fitView({ padding: 0.12 })
+  })
+}
 </script>
 
 <template>
@@ -46,15 +54,21 @@ onUnmounted(() => {
 
     <VueFlow
       v-else
+      ref="flowRef"
       v-model:nodes="nodes"
       v-model:edges="edges"
       :node-types="nodeTypes"
       class="dashboard__flow"
-      fit-view-on-init
-      :min-zoom="0.2"
-      :max-zoom="2"
+      :fit-view-on-init="false"
+      :fit-view-options="{ padding: 0.12 }"
+      :min-zoom="0.25"
+      :max-zoom="1.5"
+      :nodes-draggable="false"
+      :nodes-connectable="false"
+      :elements-selectable="false"
+      @nodes-initialized="onNodesInitialized"
     >
-      <Background :gap="20" :size="1" pattern-color="#e5e7eb" />
+      <Background :gap="20" :size="1" pattern-color="#e2e8f0" />
       <Controls />
     </VueFlow>
   </div>
