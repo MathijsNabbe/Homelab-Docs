@@ -39,6 +39,9 @@ foreach (var filePath in composeFiles)
         // Read Ports
         foreach (var port in container.Value.Ports)
             containerViewModel.Ports.Add(port);
+        
+        // Read routes
+        containerViewModel.SearchRoute(container.Value.Labels);
     }
 }
 

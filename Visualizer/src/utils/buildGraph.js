@@ -119,6 +119,7 @@ function addServiceBranch(device, service, branchX, serviceY, nodes, edges, curr
         y: containerY,
       }, {
         ports: container.Ports ?? [],
+        route: container.Route ?? null,
       }),
     )
 

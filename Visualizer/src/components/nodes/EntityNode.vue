@@ -23,6 +23,10 @@ defineProps({
       :alt="data.label"
     />
     <span class="entity-node__label">{{ data.label }}</span>
+    <span
+      v-if="type === 'container' && data.route"
+      class="entity-node__route-chip"
+    >{{ data.route }}</span>
     <div
       v-if="type === 'container' && data.ports?.length"
       class="entity-node__ports"
