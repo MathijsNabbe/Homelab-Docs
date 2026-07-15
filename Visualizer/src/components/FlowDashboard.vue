@@ -12,7 +12,6 @@ const nodeTypes = {
   device: markRaw(EntityNode),
   service: markRaw(EntityNode),
   container: markRaw(EntityNode),
-  port: markRaw(EntityNode),
 }
 
 const nodes = ref([])

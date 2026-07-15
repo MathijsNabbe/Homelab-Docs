@@ -12,10 +12,6 @@ function containerId(deviceName, serviceName, containerName) {
   return `container:${deviceName}/${serviceName}/${containerName}`
 }
 
-function portId(deviceName, serviceName, containerName, index, port) {
-  return `port:${deviceName}/${serviceName}/${containerName}/${index}:${port}`
-}
-
 function edgeId(source, target) {
   return `${source}->${target}`
 }
@@ -37,31 +33,71 @@ function createEdge(source, target) {
   }
 }
 
-function branchContentHeight(service) {
-  let height = 0
-
-  for (const container of service.Containers ?? []) {
-    height += LAYOUT.levelHeight
-    height += (container.Ports ?? []).length * LAYOUT.levelHeight
-  }
-
-  return height
-}
-
-function deviceCenterX(serviceCount) {
-  if (serviceCount <= 1) {
+function rowSpan(count, gap) {
+  if (count <= 1) {
     return 0
   }
 
-  return ((serviceCount - 1) * LAYOUT.branchGap) / 2
+  return (count - 1) * gap
+}
+
+function branchWidth(service) {
+  const containerCount = (service.Containers ?? []).length
+
+  return Math.max(
+    LAYOUT.nodeMinWidth,
+    rowSpan(containerCount, LAYOUT.containerGap) + LAYOUT.nodeMinWidth,
+  )
+}
+
+function branchContentHeight() {
+  return LAYOUT.levelHeight
+}
+
+function deviceCenterX(services) {
+  if (services.length === 0) {
+    return 0
+  }
+
+  let totalWidth = 0
+
+  for (const [index, service] of services.entries()) {
+    totalWidth += branchWidth(service)
+
+    if (index < services.length - 1) {
+      totalWidth += LAYOUT.branchGap
+    }
+  }
+
+  return totalWidth / 2
+}
+
+function centeredRowStart(branchX, branchWidthValue, count, gap) {
+  if (count === 0) {
+    return branchX
+  }
+
+  const span = rowSpan(count, gap)
+
+  return branchX + (branchWidthValue - span) / 2
 }
 
 function addServiceBranch(device, service, branchX, serviceY, nodes, edges, currentDeviceId) {
   const currentServiceId = serviceId(device.Name, service.Name)
+  const containers = service.Containers ?? []
+  const width = branchWidth(service)
+  const containerY = serviceY + LAYOUT.levelHeight
+
+  const containerStartX = centeredRowStart(
+    branchX,
+    width,
+    containers.length,
+    LAYOUT.containerGap,
+  )
 
   nodes.push(
     createNode(currentServiceId, 'service', service.Name, {
-      x: branchX,
+      x: branchX + width / 2,
       y: serviceY,
     }, {
       iconSource: service.IconUrl ?? null,
@@ -70,9 +106,7 @@ function addServiceBranch(device, service, branchX, serviceY, nodes, edges, curr
 
   edges.push(createEdge(currentDeviceId, currentServiceId))
 
-  let y = serviceY + LAYOUT.levelHeight
-
-  for (const container of service.Containers ?? []) {
+  for (const [index, container] of containers.entries()) {
     const currentContainerId = containerId(
       device.Name,
       service.Name,
@@ -81,38 +115,17 @@ function addServiceBranch(device, service, branchX, serviceY, nodes, edges, curr
 
     nodes.push(
       createNode(currentContainerId, 'container', container.Name, {
-        x: branchX,
-        y,
+        x: containerStartX + index * LAYOUT.containerGap,
+        y: containerY,
+      }, {
+        ports: container.Ports ?? [],
       }),
     )
 
     edges.push(createEdge(currentServiceId, currentContainerId))
-
-    y += LAYOUT.levelHeight
-
-    for (const [index, port] of (container.Ports ?? []).entries()) {
-      const currentPortId = portId(
-        device.Name,
-        service.Name,
-        container.Name,
-        index,
-        port,
-      )
-
-      nodes.push(
-        createNode(currentPortId, 'port', port, {
-          x: branchX,
-          y,
-        }),
-      )
-
-      edges.push(createEdge(currentContainerId, currentPortId))
-
-      y += LAYOUT.levelHeight
-    }
   }
 
-  return branchContentHeight(service)
+  return branchContentHeight()
 }
 
 export function buildGraph(devices) {
@@ -127,16 +140,15 @@ export function buildGraph(devices) {
 
     nodes.push(
       createNode(currentDeviceId, 'device', device.Name, {
-        x: deviceCenterX(services.length),
+        x: deviceCenterX(services),
         y,
       }),
     )
 
-    let maxBranchHeight = 0
+    let branchX = 0
 
-    for (const [index, service] of services.entries()) {
-      const branchX = index * LAYOUT.branchGap
-      const branchHeight = addServiceBranch(
+    for (const service of services) {
+      addServiceBranch(
         device,
         service,
         branchX,
@@ -146,10 +158,10 @@ export function buildGraph(devices) {
         currentDeviceId,
       )
 
-      maxBranchHeight = Math.max(maxBranchHeight, branchHeight)
+      branchX += branchWidth(service) + LAYOUT.branchGap
     }
 
-    y = serviceY + LAYOUT.levelHeight + maxBranchHeight + LAYOUT.blockGap
+    y = serviceY + LAYOUT.levelHeight + branchContentHeight() + LAYOUT.blockGap
   }
 
   return { nodes, edges }

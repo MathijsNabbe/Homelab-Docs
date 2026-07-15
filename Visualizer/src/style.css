@@ -122,17 +122,37 @@ body,
   object-fit: contain;
 }
 
+.entity-node--container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
 .entity-node--container .entity-node__label {
   font-weight: 400;
   color: var(--color-text-muted);
   font-size: 0.75rem;
 }
 
-.entity-node--port .entity-node__label {
+.entity-node__ports {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  max-width: 160px;
+}
+
+.entity-node__port-chip {
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg);
+  font-size: 0.625rem;
   font-weight: 400;
-  color: var(--color-text-subtle);
-  font-size: 0.6875rem;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--color-text-subtle);
+  white-space: nowrap;
 }
 
 .entity-node .vue-flow__handle {
