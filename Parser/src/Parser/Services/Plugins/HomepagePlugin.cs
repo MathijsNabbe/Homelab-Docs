@@ -10,10 +10,14 @@ public class HomepagePlugin : IIconProvider
     {
         var reference = "homepage.icon";
 
-        if (labels.TryGetValue(reference, out var iconName) == false)
+        if (labels.TryGetValue(reference, out var value) == false)
             return null;
 
-        var iconType = Path.GetExtension(iconName).Substring(1);
-        return $"https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/{iconType}/{iconName}";
+        if (Uri.TryCreate(value, UriKind.Absolute, out var uri) && 
+            (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps))
+            return value;
+        
+        var iconType = Path.GetExtension(value).Substring(1);
+        return $"https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/{iconType}/{value}";
     }
 }
