@@ -12,8 +12,6 @@ The repository is designed to be forked. Your own Docker Compose repository can 
 
 Want to run the project? Navigate to the [Getting Started Guide](https://github.com/MathijsNabbe/Homelab-Docs/wiki/Getting-started) on the wiki! 
 
-A live demo of my own server structure can be found [here!](https://homelab.mathijsnabbe.nl/)
-
 ## Integrations
 
 This project has a few integration regarding the docker-compose files, which mostly reads specific configuration labels and reflects these on the visualizer:
