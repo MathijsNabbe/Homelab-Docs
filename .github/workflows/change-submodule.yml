@@ -1,0 +1,48 @@
+name: Change Services Repository
+
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Repository URL to use as the Services submodule"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  switch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Remove existing submodule
+        run: |
+          git submodule deinit -f Services || true
+          git rm -f Services || true
+          rm -rf .git/modules/Services
+          rm -rf Services
+
+      - name: Add new submodule
+        run: |
+          git submodule add "${{ github.event.inputs.repository }}" Services
+
+      - name: Commit
+        run: |
+          git add .gitmodules Services
+          git commit -m "Switch Services submodule"
+
+      - name: Push
+        run: |
+          git push
