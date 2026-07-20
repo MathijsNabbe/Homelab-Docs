@@ -9,7 +9,6 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddPlugins(this IServiceCollection services)
     {
-        services.AddSingleton<IPlugin, DefaultProvider>();
         services.AddSingleton<IPlugin, HomepagePlugin>();
         services.AddSingleton<IPlugin, TraefikPlugin>();
         services.AddSingleton<DataRepository>();
