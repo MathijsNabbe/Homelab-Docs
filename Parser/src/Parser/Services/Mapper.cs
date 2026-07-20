@@ -40,7 +40,8 @@ public class Mapper(DataRepository dataRepository)
                 var containerViewModel = service.Containers.AddNewEntity(new Container { Name = container.Key });
 
                 // Search service icon
-                service.IconUrl = dataRepository.GetIcon(container.Value.Labels);
+                if (string.IsNullOrWhiteSpace(service.IconUrl) == false)
+                    service.IconUrl = dataRepository.GetIcon(container.Value.Labels);
 
                 // Read Ports
                 foreach (var port in container.Value.Ports)
