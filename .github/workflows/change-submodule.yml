@@ -59,7 +59,7 @@ jobs:
       - name: Push to temporary branch
         if: steps.push_main.outcome == 'failure'
         env:
-          BRANCH: switch-services-${{ github.run_id }}
+          BRANCH: switch-services-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           git checkout -b "$BRANCH"
           git push origin "$BRANCH"
@@ -68,7 +68,7 @@ jobs:
         if: steps.push_main.outcome == 'failure'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: switch-services-${{ github.run_id }}
+          BRANCH: switch-services-${{ github.run_id }}-${{ github.run_attempt }}
         run: |
           gh pr create \
             --base main \
