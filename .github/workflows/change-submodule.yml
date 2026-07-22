@@ -35,6 +35,14 @@ jobs:
           rm -rf .git/modules/Services
           rm -rf Services
 
+      - name: Configure private repository authentication
+        env:
+          HOMELAB_DOCS_SUBMODULE: ${{ secrets.HOMELAB_DOCS_SUBMODULE }}
+        run: |
+          git config --global \
+            url."https://x-access-token:${HOMELAB_DOCS_SUBMODULE}@github.com/".insteadOf \
+            "https://github.com/"
+      
       - name: Add new submodule
         run: |
           git submodule add "${{ github.event.inputs.repository }}" Services
