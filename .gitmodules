@@ -1,3 +1,3 @@
 [submodule "Services"]
 	path = Services
-	url = https://github.com/HomelabDocs/DockerExamples.git
+	url = https://github.com/MathijsNabbe/Docker-SOT.git
